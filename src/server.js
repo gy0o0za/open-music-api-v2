@@ -22,7 +22,7 @@ const init = async () => {
   const albumsService = new AlbumsService(pool);
   const songsService = new SongsService(pool);
 
-  const albumsHandler = new AlbumsHandler(albumsService);
+  const albumsHandler = new AlbumsHandler(albumsService, songsService);
   const songsHandler = new SongsHandler(songsService);
 
   const server = Hapi.server({
@@ -47,7 +47,7 @@ const init = async () => {
           .code(response.statusCode);
       }
 
-      // error bawaan hapi (misalnya 404 karena route nggak ada)
+
       if (!response.isServer) {
         return h
           .response({

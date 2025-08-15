@@ -53,7 +53,7 @@ async getSongs({ title, performer } = {}) {
   }
 
   const result = await this._pool.query(query);
-  return result.rows; // selalu array, walaupun kosong
+  return result.rows; 
 }
 
 
@@ -70,6 +70,17 @@ async getSongs({ title, performer } = {}) {
 
     return result.rows[0];
   }
+
+  async getSongsByAlbumId(albumId) {
+  const query = {
+    text: 'SELECT id, title, performer FROM songs WHERE album_id = $1',
+    values: [albumId],
+  };
+  const result = await this._pool.query(query);
+  return result.rows;
+}
+
+
 
   async editSongById(id, { title, year, performer, genre, duration, albumId }) {
     const query = {
