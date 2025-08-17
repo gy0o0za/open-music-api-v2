@@ -10,7 +10,8 @@
     "migrate": "node-pg-migrate",
     "migrate:up": "node-pg-migrate up",
     "migrate:down": "node-pg-migrate down",
-    "migrate:create": "node-pg-migrate create"
+    "migrate:create": "node-pg-migrate create",
+    "rollback": "node-pg-migrate down"
   },
   "keywords": [],
   "author": "",
@@ -18,13 +19,15 @@
   "type": "commonjs",
   "dependencies": {
     "@hapi/hapi": "^21.4.2",
+    "@hapi/jwt": "^3.2.0",
+    "auto-bind": "^4.0.0",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.1",
     "joi": "^18.0.0",
     "nanoid": "^5.1.5",
     "pg": "^8.16.3"
   },
   "devDependencies": {
-    "auto-bind": "^5.0.1",
     "eslint": "^9.33.0",
     "node-pg-migrate": "^8.0.3",
     "nodemon": "^3.1.10"
