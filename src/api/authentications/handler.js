@@ -1,5 +1,6 @@
 const autoBind = require('auto-bind');
 const bcrypt = require('bcrypt');
+const ClientError = require('../../exceptions/ClientError');
 
 class AuthenticationsHandler {
   constructor(authService, usersService, tokenManager, validator) {
@@ -11,7 +12,12 @@ class AuthenticationsHandler {
   }
 
   async postAuthenticationHandler(request, h) {
-    this._validator.validatePostAuthPayload(request.payload);
+    try {
+      this._validator.validatePostAuthPayload(request.payload);
+    } catch (error) {
+      throw new ClientError(error.message);
+    }
+    
     const { username, password } = request.payload;
 
     const { id, password: hashed } = await this._usersService.getUserByUsername(username);
@@ -32,7 +38,12 @@ class AuthenticationsHandler {
   }
 
   async putAuthenticationHandler(request) {
-    this._validator.validatePutAuthPayload(request.payload);
+    try {
+      this._validator.validatePutAuthPayload(request.payload);
+    } catch (error) {
+      throw new ClientError(error.message);
+    }
+    
     const { refreshToken } = request.payload;
 
     await this._authService.verifyRefreshToken(refreshToken);
@@ -43,7 +54,12 @@ class AuthenticationsHandler {
   }
 
   async deleteAuthenticationHandler(request) {
-    this._validator.validateDeleteAuthPayload(request.payload);
+    try {
+      this._validator.validateDeleteAuthPayload(request.payload);
+    } catch (error) {
+      throw new ClientError(error.message);
+    }
+    
     const { refreshToken } = request.payload;
     await this._authService.verifyRefreshToken(refreshToken);
     await this._authService.deleteRefreshToken(refreshToken);
