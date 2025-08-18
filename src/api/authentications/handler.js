@@ -12,7 +12,9 @@ class AuthenticationsHandler {
   }
 
   async postAuthenticationHandler(request, h) {
+    
     try {
+      
       this._validator.validatePostAuthPayload(request.payload);
     } catch (error) {
       throw new ClientError(error.message);
@@ -37,7 +39,7 @@ class AuthenticationsHandler {
     return response;
   }
 
-  async putAuthenticationHandler(request) {
+  async putAuthenticationHandler(request, h) {
     try {
       this._validator.validatePutAuthPayload(request.payload);
     } catch (error) {
@@ -50,10 +52,17 @@ class AuthenticationsHandler {
     const { userId } = this._tokenManager.verifyRefreshToken(refreshToken);
 
     const accessToken = this._tokenManager.generateAccessToken({ userId });
-    return { status: 'success', data: { accessToken } };
+    
+    // FIX: Add proper response with status code 200
+    const response = h.response({
+      status: 'success',
+      data: { accessToken }
+    });
+    response.code(200);
+    return response;
   }
 
-  async deleteAuthenticationHandler(request) {
+  async deleteAuthenticationHandler(request, h) {
     try {
       this._validator.validateDeleteAuthPayload(request.payload);
     } catch (error) {
@@ -63,7 +72,15 @@ class AuthenticationsHandler {
     const { refreshToken } = request.payload;
     await this._authService.verifyRefreshToken(refreshToken);
     await this._authService.deleteRefreshToken(refreshToken);
-    return { status: 'success', message: 'Refresh token berhasil dihapus' };
+    
+    // FIX: Add proper response with status code 200
+    const response = h.response({
+      status: 'success',
+      message: 'Refresh token berhasil dihapus'
+    });
+    response.code(200);
+    return response;
   }
 }
+
 module.exports = AuthenticationsHandler;

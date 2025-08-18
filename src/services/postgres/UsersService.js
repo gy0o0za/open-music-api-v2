@@ -17,6 +17,7 @@ class UsersService {
       values: [id, username, hashedPassword, fullname],
     };
     const result = await this._pool.query(query);
+    
     return result.rows[0].id;
   }
 

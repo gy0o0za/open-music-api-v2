@@ -10,6 +10,8 @@ const albumsRoutes = require('./api/albums/routes');
 const songsRoutes = require('./api/songs/routes');
 const usersRoutes = require('./api/users/routes');
 const authenticationsRoutes = require('./api/authentications/routes');
+const authentications = require('./api/authentications');
+
 const playlistsRoutes = require('./api/playlists/routes');
 
 const init = async () => {

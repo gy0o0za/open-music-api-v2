@@ -30,6 +30,8 @@ const errorHandler = (request, h) => {
       }).code(translated.output.statusCode);
     }
 
+    
+
     console.error(translated);
     return h.response({
       status: 'error',
