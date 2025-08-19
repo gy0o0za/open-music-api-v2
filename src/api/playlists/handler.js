@@ -67,18 +67,5 @@ class PlaylistsHandler {
     return { status: 'success', message: 'Lagu berhasil dihapus dari playlist' };
   }
 
-    async deletePlaylistByIdHandler(request, h) {
-    const { id } = request.params;
-    const { id: credentialId } = request.auth.credentials;
-
-    await this._service.verifyPlaylistOwner(id, credentialId); // pastikan pemiliknya bener
-    await this._service.deletePlaylistById(id);
-
-    return {
-      status: 'success',
-      message: 'Playlist berhasil dihapus',
-    };
-  }
-
 }
 module.exports = PlaylistsHandler;

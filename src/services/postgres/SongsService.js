@@ -13,6 +13,17 @@ class SongsService {
     }
 
     const id = `song-${nanoid(16)}`;
+
+    // Validate album existence when albumId is provided
+    if (albumId) {
+      const albumCheck = await this._pool.query({
+        text: 'SELECT id FROM albums WHERE id = $1',
+        values: [albumId],
+      });
+      if (!albumCheck.rowCount) {
+        throw new NotFoundError('Album tidak ditemukan');
+      }
+    }
     const query = {
       text: `INSERT INTO songs 
             (id, title, year, performer, genre, duration, album_id) 

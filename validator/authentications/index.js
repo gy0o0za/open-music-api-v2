@@ -1,4 +1,4 @@
-const InvariantError = require('../../exceptions/InvariantError');
+const InvariantError = require('../../src/exceptions/InvariantError');
 const { PostAuthSchema, PutAuthSchema, DeleteAuthSchema } = require('./schema');
 
 module.exports = {

@@ -1,5 +1,8 @@
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
+const Inert = require('@hapi/inert');
+const Vision = require('@hapi/vision');
+const HapiSwagger = require('hapi-swagger');
 require('dotenv').config();
 
 const createContainer = require('./container');
@@ -22,8 +25,27 @@ const init = async () => {
     host: process.env.HOST || 'localhost',
   });
 
-  // Registrasi JWT
-  await server.register(Jwt);
+  // Registrasi plugin
+  await server.register([Jwt, Inert, Vision, {
+    plugin: HapiSwagger,
+    options: {
+      info: {
+        title: 'Open Music API',
+        version: 'v2',
+      },
+      grouping: 'tags',
+      schemes: ['http'],
+      securityDefinitions: {
+        jwt: {
+          type: 'apiKey',
+          name: 'Authorization',
+          in: 'header',
+          'x-bearer-format': 'JWT',
+          description: 'Masukkan token dengan format: Bearer <token>',
+        },
+      },
+    },
+  }]);
 
   server.auth.strategy('openmusic_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
@@ -35,7 +57,7 @@ const init = async () => {
     },
     validate: (artifacts) => ({
       isValid: true,
-      credentials: { id: artifacts.decoded.payload.id },
+      credentials: { id: artifacts.decoded.payload.userId },
     }),
   });
 
@@ -45,6 +67,8 @@ const init = async () => {
   server.route(usersRoutes(handlers.usersHandler));
   server.route(authenticationsRoutes(handlers.authenticationsHandler));
   server.route(playlistsRoutes(handlers.playlistsHandler));
+
+  // Note: no custom UI script; keep default to avoid UI issues
 
   // Error handling
   server.ext('onPreResponse', errorHandler);
